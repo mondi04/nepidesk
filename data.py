@@ -12,15 +12,7 @@ SERVICES = [
         "tag": "dev",
         "status": "online",
     },
-    {
-        "id": "plane",
-        "emoji": "✈️",
-        "label": "Plane",
-        "desc": "Projektmanagement. Issues, Sprints, Roadmaps — für alle laufenden NepiDesk-Projekte.",
-        "url": "https://plan.belchenstrasse5.de",
-        "tag": "mgmt",
-        "status": "online",
-    },
+
     {
         "id": "ssh",
         "emoji": "⌨️",
@@ -70,13 +62,32 @@ SERVER_SPECS = [
 ]
 
 STACK = [
-    {"name": "htmforge",    "role": "HTML-Rendering",    "url": "https://pypi.org/project/htmforge/"},
-    {"name": "Flask",       "role": "Web Framework",     "url": "https://flask.palletsprojects.com/"},
-    {"name": "Gunicorn",    "role": "WSGI Server",       "url": "https://gunicorn.org/"},
-    {"name": "HTMX",        "role": "Interaktivität",    "url": "https://htmx.org/"},
-    {"name": "Cloudflare",  "role": "Tunnel & WAF",      "url": "https://cloudflare.com/"},
+    {"name": "htmforge",    "role": "HTML-Rendering",    "url": "https://pypi.org/project/htmforge/",             "bar": 100},
+    {"name": "Flask",       "role": "Web Framework",     "url": "https://flask.palletsprojects.com/",             "bar": 85},
+    {"name": "Gunicorn",    "role": "WSGI Server",       "url": "https://gunicorn.org/",                          "bar": 75},
+    {"name": "HTMX",        "role": "Interaktivität",    "url": "https://htmx.org/",                              "bar": 70},
+    {"name": "Cloudflare",  "role": "Tunnel & WAF",      "url": "https://cloudflare.com/",                        "bar": 90},
 ]
 
 HTMFORGE_VERSION = "0.4.0"
 SITE_OWNER = "Mondi · NepiDesk"
 GRAFANA_URL = "https://monitoring.belchenstrasse5.de?kiosk=tv&viewPanel=0"
+
+GRAFANA_BASE = (
+    "https://monitoring.belchenstrasse5.de/d-solo/rYdddlPWk/node-exporter-full"
+    "?orgId=1&timezone=browser"
+    "&var-ds_prometheus=ef6exteo9p8g0e"
+    "&var-job=node&var-nodename=g7"
+    "&var-node=192.168.179.10:9100"
+    "&refresh=1m"
+    "&__feature.dashboardSceneSolo=true"
+)
+
+# cols: wie viele Spalten im 3-Spalten-Grid das Panel belegt
+GRAFANA_PANELS = [
+    {"id": "panel-20",  "label": "CPU Usage",  "cols": 1, "height": 200},
+    {"id": "panel-155", "label": "RAM Usage",  "cols": 1, "height": 200},
+    {"id": "panel-15",  "label": "Uptime",     "cols": 1, "height": 200},
+    {"id": "panel-77",  "label": "CPU Graph",  "cols": 2, "height": 240},
+    {"id": "panel-78",  "label": "RAM Graph",  "cols": 1, "height": 240},
+]

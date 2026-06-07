@@ -14,7 +14,7 @@ from htmforge.components.tabs import Tabs
 from htmforge.components.badge import Badge, BadgeVariant
 from htmforge.components.toast import Toast, ToastVariant
 
-from data import SERVICES, SERVER_SPECS, STACK, HTMFORGE_VERSION, SITE_OWNER, GRAFANA_URL
+from data import SERVICES, SERVER_SPECS, STACK, HTMFORGE_VERSION, SITE_OWNER, GRAFANA_BASE, GRAFANA_PANELS
 
 
 # ---------------------------------------------------------------------------
@@ -156,10 +156,11 @@ def build_service_card(svc: dict, index: int):
 def build_services():
     cards = [build_service_card(s, i) for i, s in enumerate(SERVICES)]
     return section(
-        div(
-            span("01", class_="section-num"),
-            h2("Services", class_="section-title"),
-            class_="section-head",
+        section_head(
+            "01",
+            "Services",
+            "Alle laufenden Dienste auf g7 — self-hosted, passwortgeschützt, "
+            "über Cloudflare Tunnel erreichbar. Kein offener Port, kein Nginx.",
         ),
         div(*cards, class_="svc-grid"),
         class_="services-section section-block",
@@ -172,29 +173,45 @@ def build_services():
 # ---------------------------------------------------------------------------
 
 def build_specs_ticker():
-    items = []
-    for spec in SERVER_SPECS:
-        items.append(
+    def make_items():
+        return [
             div(
-                span(spec["key"], class_="spec-key"),
-                span(spec["value"], class_="spec-val"),
+                span(spec["key"],    class_="spec-key"),
+                span(spec["value"],  class_="spec-val"),
                 span(spec["detail"], class_="spec-detail"),
                 class_="spec-item",
             )
-        )
-    # duplicate for infinite scroll
-    items_dup = items + [
-        div(
-            span(spec["key"], class_="spec-key"),
-            span(spec["value"], class_="spec-val"),
-            span(spec["detail"], class_="spec-detail"),
-            class_="spec-item",
-        )
-        for spec in SERVER_SPECS
-    ]
+            for spec in SERVER_SPECS
+        ]
+    # 4× wiederholen damit der Loop auf jeder Bildschirmbreite nahtlos ist
+    all_items = make_items() + make_items() + make_items() + make_items()
     return div(
-        div(*items_dup, class_="ticker-track"),
-        class_="specs-ticker reveal",
+        div(*all_items, class_="ticker-track"),
+        class_="specs-ticker",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section header with typewriter
+# ---------------------------------------------------------------------------
+
+def section_head(num: str, title: str, subtitle: str = ""):
+    """Gibt einen Section-Header zurück. Der Titel bekommt data-typewriter,
+    JS tippt ihn Zeichen für Zeichen wenn er ins Viewport kommt."""
+    return div(
+        div(
+            span(num, class_="section-num"),
+            span("·", class_="section-dot"),
+            class_="section-meta",
+        ),
+        h2(
+            span("", class_="typewriter-text"),
+            span("▌", class_="typewriter-cursor"),
+            data_typewriter=title,
+            class_="section-title typewriter",
+        ),
+        p(subtitle, class_="section-sub") if subtitle else span(""),
+        class_="section-head",
     )
 
 
@@ -203,22 +220,60 @@ def build_specs_ticker():
 # ---------------------------------------------------------------------------
 
 def build_dashboard():
-    spinner = Spinner(size=SpinnerSize.MD, label="Grafana lädt …")
+    # Dynamische from/to: jetzt bis jetzt-24h (ms timestamps)
+    # Flask/Python berechnet das zur Laufzeit im build_page() Aufruf —
+    # hier bauen wir die Panels mit einem JS-snippet das die URLs patcht.
+    # Einfacher: wir nutzen Grafanas "now-24h" relative Zeit via URL-Param.
+    def panel_url(panel_id: str) -> str:
+        return (
+            GRAFANA_BASE
+            + f"&from=now-24h&to=now"
+            + f"&panelId={panel_id}"
+        )
+
+    def panel_iframe(p: dict):
+        col_class = "panel-wide" if p["cols"] == 2 else "panel-single"
+        return div(
+            iframe(
+                src=panel_url(p["id"]),
+                loading="lazy",
+                class_="panel-frame",
+                style=f"height:{p['height']}px",
+            ),
+            span(p["label"], class_="panel-label"),
+            class_=f"panel-cell {col_class} reveal",
+        )
+
+    panels = [panel_iframe(p) for p in GRAFANA_PANELS]
+
     return section(
-        div(
-            span("02", class_="section-num"),
-            h2("System Dashboard", class_="section-title"),
-            class_="section-head",
+        section_head(
+            "02",
+            "System Dashboard",
+            "Live-Metriken von g7 — Prometheus + Node Exporter via Grafana. "
+            "CPU, RAM, Disk I/O, Netzwerktraffic — alles in Echtzeit.",
         ),
         div(
-            div(spinner, p("Dashboard wird geladen …", class_="loading-hint"), class_="grafana-loading", id="grafana-loading"),
-            iframe(
-                src=GRAFANA_URL,
-                loading="lazy",
-                onload="document.getElementById('grafana-loading').style.display='none'",
-                class_="grafana-frame",
+            # Left info
+            div(
+                div(
+                    div(span("HOST",   class_="info-key"), span("g7 · Ubuntu 22.04",             class_="info-val"), class_="info-row reveal"),
+                    div(span("RAM",    class_="info-key"), span("16 GB DDR3",                     class_="info-val"), class_="info-row reveal", data_delay="60"),
+                    div(span("STACK",  class_="info-key"), span("Prometheus + Node Exporter",     class_="info-val"), class_="info-row reveal", data_delay="120"),
+                    div(span("TUNNEL", class_="info-key"), span("Cloudflare — kein offener Port", class_="info-val"), class_="info-row reveal", data_delay="180"),
+                    div(span("UPDATE", class_="info-key"), span("Echtzeit · 1m Refresh",         class_="info-val info-green"), class_="info-row reveal", data_delay="240"),
+                    class_="info-table",
+                ),
+                p(
+                    "Das Dashboard läuft vollständig self-hosted. Kein Cloud-Abo, "
+                    "keine externen Services — nur g7, Grafana und ein Cloudflare Tunnel.",
+                    class_="info-prose reveal", data_delay="300",
+                ),
+                class_="dashboard-info",
             ),
-            class_="grafana-wrap reveal",
+            # Right panel grid
+            div(*panels, class_="panels-grid"),
+            class_="dashboard-split",
         ),
         class_="dashboard-section section-block",
         id="dashboard",
@@ -232,21 +287,58 @@ def build_dashboard():
 def build_stack():
     items = [
         div(
-            span(s["name"], class_="stack-name"),
-            span(s["role"], class_="stack-role"),
-            a("↗", href=s["url"], target="_blank", class_="stack-link"),
+            div(
+                span(s["name"], class_="stack-name"),
+                span(s["role"], class_="stack-role"),
+                class_="stack-info",
+            ),
+            # Animated bar
+            div(
+                div(class_="stack-bar-fill", style=f"width:{s.get('bar', 90)}%"),
+                class_="stack-bar",
+            ),
+            a("↗", href=s["url"], target="_blank", rel="noopener", class_="stack-link"),
             class_="stack-item reveal",
-            data_delay=str(i * 60),
+            data_delay=str(i * 70),
         )
         for i, s in enumerate(STACK)
     ]
+
     return section(
-        div(
-            span("03", class_="section-num"),
-            h2("Stack", class_="section-title"),
-            class_="section-head",
+        section_head(
+            "03",
+            "Tech Stack",
+            "Die Werkzeuge hinter belchenstrasse5.de — und hinter NepiDesk. "
+            "Jedes Tool ist bewusst gewählt: self-hosted, open-source, kein Vendor-Lock-in.",
         ),
-        div(*items, class_="stack-list"),
+        # Split: Erklärtext links, Stack-Liste rechts
+        div(
+            # Left — prose
+            div(
+                p(
+                    "htmforge übernimmt das komplette HTML-Rendering in Python — "
+                    "kein Jinja, kein Template-Ordner. Was du hier siehst, wurde "
+                    "Zeile für Zeile in Python gebaut.",
+                    class_="stack-prose reveal",
+                ),
+                p(
+                    "Flask ist bewusst dünn gehalten: nur Routes, kein Business-Logik. "
+                    "Gunicorn läuft als systemd-Service, Cloudflare Tunnel ersetzt "
+                    "Nginx und SSL komplett.",
+                    class_="stack-prose reveal", data_delay="100",
+                ),
+                div(
+                    span("KEIN NGINX", class_="pill-tag"),
+                    span("KEIN SSL-ZERTIFIKAT", class_="pill-tag"),
+                    span("KEIN JINJA", class_="pill-tag"),
+                    class_="pill-row reveal", data_delay="200",
+                ),
+                class_="stack-left",
+            ),
+            # Right — list
+            div(*items, class_="stack-list"),
+            class_="stack-split",
+        ),
         class_="stack-section section-block",
         id="stack",
     )
