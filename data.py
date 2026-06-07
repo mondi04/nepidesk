@@ -6,7 +6,27 @@ Alle Inhalte. Keine Logik, keine htmforge-Imports.
 HTMFORGE_VERSION = "0.4.0"
 SITE_NAME        = "NepiDesk"
 SITE_URL         = "https://nepidesk.de"
-SITE_AUTHOR      = "Moritz"
+SITE_AUTHOR      = "Mondi"
+
+# ── Impressum ─────────────────────────────────────────────
+IMPRESSUM = {
+    "name":          "Moritz Mond",
+    "strasse":       "Belchenstrasse 5",
+    "ort":           "79677, Aitern",
+    "email":         "kontakt@nepidesk.de",
+    "rechtsform":    "Privatperson",
+    # Sobald du ein Gewerbe anmeldest:
+    # "steuernummer": "XX/XXX/XXXXX",
+    # "ustid":        "DE XXXXXXXXX",
+}
+
+# ── Datenschutz ───────────────────────────────────────────
+DATENSCHUTZ = {
+    "verantwortlicher_name":  "Moritz Mond",
+    "verantwortlicher_email": "kontakt@nepidesk.de",
+    "hosting":                "Eigener Server (Self-hosted, Deutschland)",
+    "cloudflare":             True,   # Cloudflare Tunnel im Einsatz
+}
 
 # ── Hero ──────────────────────────────────────────────────
 HERO_CLAIM   = "Software. Security. Open Source."
@@ -25,68 +45,131 @@ TICKER_ITEMS = [
     {"key": "SECURITY", "value": "Zero Trust",                 "detail": "WAF, Tunnel, Ed25519 — Security by design"},
 ]
 
-# ── Projekte / Tools ──────────────────────────────────────
-PROJECTS = [
+# ── Home Preview Cards ────────────────────────────────────
+# Teaser-Karten auf der Startseite für OSS und Software
+
+HOME_OSS_PREVIEW = {
+    "label":   "Open Source",
+    "emoji":   "⚒️",
+    "tagline": "Python-Bibliotheken, MIT-lizenziert",
+    "desc": (
+        "Ich entwickle und pflege Open-Source-Bibliotheken, die aus echten "
+        "Projekten entstehen — kein Spielzeug, sondern produktiv eingesetzter Code. "
+        "Aktuell zwei Pakete auf PyPI."
+    ),
+    "count":   "2 Pakete auf PyPI",
+    "url":     "/opensource",
+    "cta":     "Alle Projekte →",
+    "tag":     "oss",
+}
+
+HOME_SOFTWARE_PREVIEW = {
+    "label":   "Software",
+    "emoji":   "🖥️",
+    "tagline": "Desktop & Web Applikationen",
+    "desc": (
+        "Kommerzielle und interne Software — Desktop-Apps mit Avalonia, "
+        "Web-Apps mit Flask. Für Kunden und für den eigenen Betrieb."
+    ),
+    "count":   "Coming soon",
+    "url":     "/software",
+    "cta":     "Mehr erfahren →",
+    "tag":     "dev",
+}
+
+HOME_INFRA_PREVIEW = {
+    "label":   "Infra",
+    "emoji":   "🖧",
+    "tagline": "Self-hosted · Zero Trust · Kein Cloud-Zwang",
+    "desc": (
+        "Eigene Server, Cloudflare Tunnel, Grafana-Monitoring — "
+        "alles unter Kontrolle. Live-Metriken und Einblick in den Stack."
+    ),
+    "count":   "Live Monitoring",
+    "url":     "/infra",
+    "cta":     "Infra ansehen →",
+    "tag":     "sys",
+}
+
+# ── OSS Projekte ──────────────────────────────────────────
+OSS_PROJECTS = [
     {
-        "id":      "htmforge",
-        "emoji":   "⚒️",
-        "label":   "htmforge",
-        "tagline": "HTML ohne Templates",
-        "desc":    (
+        "id":       "htmforge",
+        "emoji":    "⚒️",
+        "label":    "htmforge",
+        "tagline":  "HTML ohne Templates",
+        "desc": (
             "Open-Source Python-Bibliothek für typsicheres HTML-Rendering. "
             "Kein Jinja, kein Template-Ordner — alles in Python. "
-            f"Diese Seite ist live damit gebaut."
+            "Pydantic-validiert, markupsafe-escaped, produktionsreif. "
+            "Diese Seite ist live damit gebaut."
         ),
-        "url":     f"https://htmforge.nepidesk.de",
-        "cta":     "Mehr erfahren →",
-        "tag":     "oss",
-        "external": False,
+        "meta": [
+            ("PyPI",     "htmforge"),
+            ("Lizenz",   "MIT + Commons Clause"),
+            ("Version",  f"v{HTMFORGE_VERSION}"),
+            ("Status",   "Aktiv"),
+        ],
+        "links": [
+            {"label": "Docs →",   "url": "https://htmforge.nepidesk.de", "primary": True},
+            {"label": "PyPI ↗",   "url": "https://pypi.org/project/htmforge/", "primary": False},
+        ],
+        "tag": "oss",
     },
     {
-        "id":      "gitea",
-        "emoji":   "📦",
-        "label":   "Gitea",
-        "tagline": "Self-hosted Git",
-        "desc":    (
-            "Eigene Git-Instanz — alle Repos, CI/CD-Pipelines und Releases "
-            "laufen lokal. Kein GitHub-Abo, keine Abhängigkeit von Dritten."
+        "id":       "edgesync",
+        "emoji":    "📡",
+        "label":    "edgesync",
+        "tagline":  "MQTT Config Sync für Edge Devices",
+        "desc": (
+            "Leichtgewichtiges Python-Tool zur Konfigurationssynchronisation "
+            "von Edge-Device-Flotten über MQTT. Pydantic v2 Modelle, "
+            "Hook-System, Agent/Fleet-Klassen — minimal, robust, testbar."
         ),
-        "url":     "https://git.nepidesk.de",
-        "cta":     "Öffnen →",
-        "tag":     "dev",
-        "external": True,
-    },
-    {
-        "id":      "ssh",
-        "emoji":   "⌨️",
-        "label":   "SSH Terminal",
-        "tagline": "Internes Tool",
-        "desc":    (
-            "Web-Terminal via ttyd, gesichert durch Cloudflare WAF und "
-            "Basic Auth. Zeigt wie wir sicheren Remote-Zugriff ohne "
-            "VPN und ohne offene Ports realisieren."
-        ),
-        "url":     "/ssh",
-        "cta":     "Wie wir es nutzen →",
-        "tag":     "sys",
-        "external": False,
-    },
-    {
-        "id":      "nas",
-        "emoji":   "💾",
-        "label":   "NAS Storage",
-        "tagline": "Internes Tool",
-        "desc":    (
-            "Redundanter Netzwerkspeicher mit automatischem Backup-Sync. "
-            "Zwei Geräte, ein Workflow — zeigt unseren Ansatz für "
-            "zuverlässige Datenhaltung ohne Cloud."
-        ),
-        "url":     "/nas",
-        "cta":     "Wie wir es nutzen →",
-        "tag":     "sys",
-        "external": False,
+        "meta": [
+            ("PyPI",     "edgesync"),
+            ("Lizenz",   "MIT"),
+            ("Version",  "v0.1.0"),
+            ("Status",   "Beta"),
+        ],
+        "links": [
+            {"label": "PyPI ↗",    "url": "https://pypi.org/project/edgesync/", "primary": True},
+            {"label": "GitHub ↗",  "url": "https://github.com/mondi04/edgesync", "primary": False},
+        ],
+        "tag": "oss",
     },
 ]
+
+# ── Software Platzhalter ──────────────────────────────────
+SOFTWARE_COMING_SOON = {
+    "title":   "Software Projekte",
+    "tagline": "Desktop & Web — Coming Soon",
+    "intro": (
+        "Hier werden demnächst kommerzielle und interne Software-Projekte vorgestellt: "
+        "Desktop-Applikationen mit Avalonia UI, Web-Apps mit Flask und Python, "
+        "sowie interne Tools für den Geschäftsbetrieb."
+    ),
+    "teaser": [
+        {
+            "emoji": "🖥️",
+            "label": "Desktop Apps",
+            "desc":  "Avalonia UI · EF Core · CommunityToolkit.Mvvm — plattformübergreifende Desktop-Anwendungen.",
+            "status": "in Entwicklung",
+        },
+        {
+            "emoji": "🌐",
+            "label": "Web Apps",
+            "desc":  "Flask · htmforge · HTMX — schlanke Web-Applikationen ohne Framework-Overhead.",
+            "status": "in Entwicklung",
+        },
+        {
+            "emoji": "🔧",
+            "label": "Interne Tools",
+            "desc":  "Maßgeschneiderte Lösungen für Workflows, Automatisierung und Datenverwaltung.",
+            "status": "in Entwicklung",
+        },
+    ],
+}
 
 # ── Stack ─────────────────────────────────────────────────
 STACK = [
@@ -116,7 +199,16 @@ GRAFANA_PANELS = [
     {"id": "panel-78",  "label": "RAM Graph", "cols": 1, "height": 240},
 ]
 
-# ── Unterseiten ───────────────────────────────────────────
+# ── Infra Stack Info ──────────────────────────────────────
+INFRA_INFO = [
+    ("STACK",   "Prometheus + Node Exporter"),
+    ("REFRESH", "1 Minute"),
+    ("HOSTING", "Self-hosted · kein Cloud"),
+    ("ACCESS",  "Cloudflare Tunnel"),
+    ("STATUS",  "Operational ✓"),
+]
+
+# ── Unterseiten (SSH, NAS) ────────────────────────────────
 SSH_PAGE = {
     "title":   "SSH Terminal",
     "tagline": "Sicherer Web-Zugriff ohne VPN",

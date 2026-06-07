@@ -14,10 +14,14 @@ from htmforge.components.toast import Toast, ToastVariant
 from data import (
     SITE_NAME, SITE_URL, SITE_AUTHOR,
     HERO_CLAIM, HERO_SUB,
-    TICKER_ITEMS, PROJECTS, STACK,
-    GRAFANA_BASE, GRAFANA_PANELS,
+    TICKER_ITEMS, STACK,
+    GRAFANA_BASE, GRAFANA_PANELS, INFRA_INFO,
     SSH_PAGE, NAS_PAGE,
     HTMFORGE_VERSION,
+    IMPRESSUM, DATENSCHUTZ,
+    HOME_OSS_PREVIEW, HOME_SOFTWARE_PREVIEW, HOME_INFRA_PREVIEW,
+    OSS_PROJECTS,
+    SOFTWARE_COMING_SOON,
 )
 
 
@@ -46,17 +50,16 @@ def section_head(num: str, title: str, subtitle: str = ""):
 
 def build_header(active: str = "home"):
     nav_links = [
-        ("home",    "/",          "Start"),
-        ("tools",   "/#tools",    "Tools"),
-        ("stack",   "/#stack",    "Stack"),
-        ("htmforge","https://htmforge.nepidesk.de", "htmforge ↗"),
+        ("home",        "/",            "Start"),
+        ("opensource",  "/opensource",  "Open Source"),
+        ("software",    "/software",    "Software"),
+        ("infra",       "/infra",       "Infra"),
     ]
     nav_items = [
         a(
             label,
             href=href,
             class_=f"nav-link {'nav-active' if key == active else ''}",
-            **({"target": "_blank", "rel": "noopener"} if href.startswith("http") else {}),
         )
         for key, href, label in nav_links
     ]
@@ -94,28 +97,23 @@ def build_hero():
         div(class_="parallax-glow parallax-glow-1", data_speed="0.5"),
         div(class_="parallax-glow parallax-glow-2", data_speed="0.2"),
         div(
-            # Eyebrow
             div(
                 span("", class_="eyebrow-dot"),
                 span("Freelance · Remote · Worldwide", class_="eyebrow-text"),
                 class_="eyebrow",
             ),
-            # Logotype
             div(
                 span("NEPI", class_="hero-word hero-word-1"),
                 span("DESK", class_="hero-word hero-word-2"),
                 class_="hero-logotype",
             ),
-            # Claim
             p(HERO_CLAIM, class_="hero-claim"),
             p(HERO_SUB, class_="hero-sub"),
-            # CTAs
             div(
-                a("Projekte ansehen", href="/#tools", class_="cta-primary"),
+                a("Projekte ansehen", href="/opensource", class_="cta-primary"),
                 a("Kontakt", href="mailto:kontakt@nepidesk.de", class_="cta-secondary"),
                 class_="hero-ctas",
             ),
-            # HUD corners
             div(class_="hud-corner hud-tl"),
             div(class_="hud-corner hud-tr"),
             div(class_="hud-corner hud-bl"),
@@ -143,87 +141,39 @@ def build_ticker():
     return div(div(*all_items, class_="ticker-track"), class_="specs-ticker")
 
 
-# ── Projects ─────────────────────────────────────────────
+# ── Home Preview Cards ────────────────────────────────────
 
-def build_project_card(proj: dict, index: int):
-    target_kwargs = {"target": "_blank", "rel": "noopener"} if proj["external"] else {}
+def build_preview_card(data: dict, index: int):
     return div(
         div(
-            span(proj["emoji"], class_="svc-icon"),
-            div(
-                tag_chip(proj["tag"]),
-                span(proj["tagline"], class_="svc-tagline"),
-                class_="svc-badges",
-            ),
-            class_="svc-top",
+            span(data["emoji"], class_="preview-icon"),
+            tag_chip(data["tag"]),
+            class_="preview-top",
         ),
-        h3(proj["label"], class_="svc-name"),
-        p(proj["desc"], class_="svc-desc"),
+        h3(data["label"], class_="preview-label"),
+        p(data["tagline"], class_="preview-tagline"),
+        p(data["desc"], class_="preview-desc"),
         div(
-            a(proj["cta"], href=proj["url"], class_="svc-btn", **target_kwargs),
-            class_="svc-actions",
+            span(data["count"], class_="preview-count"),
+            a(data["cta"], href=data["url"], class_="svc-btn"),
+            class_="preview-foot",
         ),
-        class_="svc-card reveal",
-        data_delay=str(index * 80),
+        class_="preview-card reveal",
+        data_delay=str(index * 120),
     )
 
 
-def build_projects():
-    cards = [build_project_card(p, i) for i, p in enumerate(PROJECTS)]
+def build_home_previews():
+    previews = [HOME_OSS_PREVIEW, HOME_SOFTWARE_PREVIEW, HOME_INFRA_PREVIEW]
+    cards = [build_preview_card(p, i) for i, p in enumerate(previews)]
     return section(
         section_head(
-            "01", "Tools & Projekte",
-            "Open-Source-Bibliotheken, self-hosted Dienste und interne Tools — "
-            "gebaut mit dem gleichen Stack, dokumentiert damit andere davon lernen können.",
+            "01", "Was wir bauen",
+            "Open-Source-Bibliotheken, kommerzielle Software und self-hosted Infrastruktur — "
+            "aus einer Hand, mit dem gleichen Anspruch an Qualität.",
         ),
-        div(*cards, class_="svc-grid"),
-        class_="services-section section-block", id="tools",
-    )
-
-
-# ── Dashboard ────────────────────────────────────────────
-
-def build_dashboard():
-    def panel_url(pid): return f"{GRAFANA_BASE}&from=now-24h&to=now&panelId={pid}"
-
-    def panel_cell(p):
-        col = "panel-wide" if p["cols"] == 2 else "panel-single"
-        return div(
-            iframe(src=panel_url(p["id"]), loading="lazy",
-                   class_="panel-frame", style=f"height:{p['height']}px"),
-            span(p["label"], class_="panel-label"),
-            class_=f"panel-cell {col} reveal",
-        )
-
-    panels = [panel_cell(p) for p in GRAFANA_PANELS]
-
-    return section(
-        section_head(
-            "02", "Live Infrastructure",
-            "Echtzeit-Metriken unserer Server-Infrastruktur — "
-            "Prometheus + Grafana, fully self-hosted.",
-        ),
-        div(
-            div(
-                div(
-                    div(span("STACK",   class_="info-key"), span("Prometheus + Node Exporter", class_="info-val"), class_="info-row reveal"),
-                    div(span("REFRESH", class_="info-key"), span("1 Minute",                   class_="info-val"), class_="info-row reveal", data_delay="60"),
-                    div(span("HOSTING", class_="info-key"), span("Self-hosted · kein Cloud",   class_="info-val"), class_="info-row reveal", data_delay="120"),
-                    div(span("ACCESS",  class_="info-key"), span("Cloudflare Tunnel",          class_="info-val"), class_="info-row reveal", data_delay="180"),
-                    div(span("STATUS",  class_="info-key"), span("Operational ✓",              class_="info-val info-green"), class_="info-row reveal", data_delay="240"),
-                    class_="info-table",
-                ),
-                p(
-                    "Zeigt wie wir Infrastruktur-Monitoring ohne Cloud-Abo und "
-                    "ohne offene Ports realisieren — Grafana hinter einem Cloudflare Tunnel.",
-                    class_="info-prose reveal", data_delay="300",
-                ),
-                class_="dashboard-info",
-            ),
-            div(*panels, class_="panels-grid"),
-            class_="dashboard-split",
-        ),
-        class_="dashboard-section section-block", id="dashboard",
+        div(*cards, class_="preview-grid"),
+        class_="previews-section section-block", id="projekte",
     )
 
 
@@ -241,7 +191,7 @@ def build_stack():
     ]
     return section(
         section_head(
-            "03", "Tech Stack",
+            "02", "Tech Stack",
             "Bewusst gewählt: open-source, self-hosted, kein Vendor-Lock-in. "
             "Jedes Tool hat einen konkreten Grund hier zu sein.",
         ),
@@ -275,9 +225,13 @@ def build_footer():
         div(
             span("© 2025 NepiDesk · ", class_="dim"),
             span(SITE_AUTHOR, class_="dim"),
-            span(" · ", class_="dim"),
-            a("Impressum", href="/impressum", class_="footer-link"),
             class_="footer-left",
+        ),
+        div(
+            a("Impressum", href="/impressum", class_="footer-link"),
+            span(" · ", class_="dim"),
+            a("Datenschutz", href="/datenschutz", class_="footer-link"),
+            class_="footer-center",
         ),
         div(
             span("Built with ", class_="dim"),
@@ -296,7 +250,201 @@ def build_toast_success():
     return Toast(message="✓ URL kopiert", variant=ToastVariant.SUCCESS, duration_ms=2500)
 
 
-# ── Subpage shell ────────────────────────────────────────
+# ── Head helper ──────────────────────────────────────────
+
+def _head(page_title: str, description: str, css_hash: str = ""):
+    return head(
+        meta(charset="UTF-8"),
+        meta(name="viewport", content="width=device-width, initial-scale=1.0"),
+        meta(name="description", content=description),
+        meta(name="author",      content="Moritz · NepiDesk"),
+        meta(property="og:title",       content=page_title),
+        meta(property="og:description", content=description),
+        meta(property="og:type",        content="website"),
+        meta(property="og:url",         content=SITE_URL),
+        title(page_title),
+        link(rel="canonical", href=SITE_URL),
+        link(rel="preconnect", href="https://fonts.googleapis.com"),
+        link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin=""),
+        link(rel="stylesheet",
+             href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap"),
+        link(rel="stylesheet", href=f"/static/css/main.css?v={css_hash}"),
+        script(src="https://unpkg.com/htmx.org@1.9.12", defer=True),
+    )
+
+
+def _page_shell(page_title: str, description: str, active: str, content, css_hash="", js_hash=""):
+    """Generische Seiten-Shell für alle Unterseiten."""
+    page = html(
+        _head(page_title + " — NepiDesk", description, css_hash),
+        body(
+            build_header(active),
+            main(*content, class_="page-main"),
+            build_footer(),
+            div(id="toast-slot", class_="toast-slot"),
+            script(src=f"/static/js/main.js?v={js_hash}", defer=True),
+        ),
+        lang="de",
+    )
+    return "<!DOCTYPE html>\n" + render(page)
+
+
+# ── OSS Page ─────────────────────────────────────────────
+
+def _oss_project_card(proj: dict, index: int):
+    meta_rows = [
+        div(
+            span(k, class_="meta-key"),
+            span(v, class_="meta-val"),
+            class_="meta-row",
+        )
+        for k, v in proj["meta"]
+    ]
+    link_btns = [
+        a(
+            lnk["label"],
+            href=lnk["url"],
+            target="_blank", rel="noopener",
+            class_=f"svc-btn {'svc-btn-secondary' if not lnk['primary'] else ''}",
+        )
+        for lnk in proj["links"]
+    ]
+    return div(
+        div(
+            span(proj["emoji"], class_="oss-icon"),
+            div(
+                tag_chip(proj["tag"]),
+                span(proj["tagline"], class_="svc-tagline"),
+                class_="svc-badges",
+            ),
+            class_="svc-top",
+        ),
+        h3(proj["label"], class_="svc-name"),
+        p(proj["desc"], class_="svc-desc"),
+        div(*meta_rows, class_="oss-meta"),
+        div(*link_btns, class_="svc-actions"),
+        class_="oss-card reveal",
+        data_delay=str(index * 100),
+    )
+
+
+def build_opensource_page(css_hash="", js_hash=""):
+    cards = [_oss_project_card(p, i) for i, p in enumerate(OSS_PROJECTS)]
+    content = [
+        section(
+            section_head(
+                "01", "Open Source",
+                "Bibliotheken die aus echten Projekten entstehen — auf PyPI veröffentlicht, "
+                "MIT-lizenziert, produktionsreif. Kein Spielzeug.",
+            ),
+            div(*cards, class_="oss-grid"),
+            class_="section-block",
+        ),
+    ]
+    return _page_shell(
+        "Open Source", "Python-Bibliotheken von NepiDesk — MIT-lizenziert, auf PyPI.",
+        "opensource", content, css_hash, js_hash,
+    )
+
+
+# ── Software Page ─────────────────────────────────────────
+
+def build_software_page(css_hash="", js_hash=""):
+    cs = SOFTWARE_COMING_SOON
+    teaser_cards = [
+        div(
+            span(t["emoji"], class_="teaser-icon"),
+            h3(t["label"], class_="teaser-label"),
+            p(t["desc"], class_="teaser-desc"),
+            span(t["status"], class_="teaser-status"),
+            class_="teaser-card reveal",
+            data_delay=str(i * 100),
+        )
+        for i, t in enumerate(cs["teaser"])
+    ]
+    content = [
+        section(
+            section_head("01", cs["title"], cs["intro"]),
+            # Coming Soon Banner
+            div(
+                div(
+                    span("🚧", class_="coming-emoji"),
+                    h2("Coming Soon", class_="coming-title"),
+                    p(
+                        "Software-Projekte werden hier dokumentiert sobald sie "
+                        "öffentlich verfügbar sind. Aktuell in aktiver Entwicklung.",
+                        class_="coming-sub",
+                    ),
+                    class_="coming-inner",
+                ),
+                class_="coming-banner reveal",
+            ),
+            div(*teaser_cards, class_="teaser-grid"),
+            class_="section-block",
+        ),
+    ]
+    return _page_shell(
+        "Software", "Kommerzielle und interne Software-Projekte von NepiDesk.",
+        "software", content, css_hash, js_hash,
+    )
+
+
+# ── Infra Page ────────────────────────────────────────────
+
+def build_infra_page(css_hash="", js_hash=""):
+    def panel_url(pid): return f"{GRAFANA_BASE}&from=now-24h&to=now&panelId={pid}"
+
+    def panel_cell(p):
+        col = "panel-wide" if p["cols"] == 2 else "panel-single"
+        return div(
+            iframe(src=panel_url(p["id"]), loading="lazy",
+                   class_="panel-frame", style=f"height:{p['height']}px"),
+            span(p["label"], class_="panel-label"),
+            class_=f"panel-cell {col} reveal",
+        )
+
+    panels = [panel_cell(p) for p in GRAFANA_PANELS]
+
+    info_rows = [
+        div(
+            span(k, class_="info-key"),
+            span(v, class_="info-val" + (" info-green" if k == "STATUS" else "")),
+            class_="info-row reveal",
+            data_delay=str(i * 60),
+        )
+        for i, (k, v) in enumerate(INFRA_INFO)
+    ]
+
+    content = [
+        section(
+            section_head(
+                "01", "Live Infrastructure",
+                "Echtzeit-Metriken unserer Server-Infrastruktur — "
+                "Prometheus + Grafana, fully self-hosted.",
+            ),
+            div(
+                div(
+                    div(*info_rows, class_="info-table"),
+                    p(
+                        "Zeigt wie wir Infrastruktur-Monitoring ohne Cloud-Abo und "
+                        "ohne offene Ports realisieren — Grafana hinter einem Cloudflare Tunnel.",
+                        class_="info-prose reveal", data_delay="300",
+                    ),
+                    class_="dashboard-info",
+                ),
+                div(*panels, class_="panels-grid"),
+                class_="dashboard-split",
+            ),
+            class_="section-block",
+        ),
+    ]
+    return _page_shell(
+        "Infra", "Live-Monitoring der NepiDesk Infrastruktur — Prometheus, Grafana, self-hosted.",
+        "infra", content, css_hash, js_hash,
+    )
+
+
+# ── Subpage shell (SSH, NAS) ──────────────────────────────
 
 def _subpage_shell(page_data: dict, content, css_hash="", js_hash=""):
     page = html(
@@ -343,29 +491,6 @@ def _subpage_shell(page_data: dict, content, css_hash="", js_hash=""):
     return "<!DOCTYPE html>\n" + render(page)
 
 
-# ── Head helper ──────────────────────────────────────────
-
-def _head(page_title: str, description: str, css_hash: str = ""):
-    return head(
-        meta(charset="UTF-8"),
-        meta(name="viewport", content="width=device-width, initial-scale=1.0"),
-        meta(name="description", content=description),
-        meta(name="author",      content="Moritz · NepiDesk"),
-        meta(property="og:title",       content=page_title),
-        meta(property="og:description", content=description),
-        meta(property="og:type",        content="website"),
-        meta(property="og:url",         content=SITE_URL),
-        title(page_title),
-        link(rel="canonical", href=SITE_URL),
-        link(rel="preconnect", href="https://fonts.googleapis.com"),
-        link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin=""),
-        link(rel="stylesheet",
-             href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap"),
-        link(rel="stylesheet", href=f"/static/css/main.css?v={css_hash}"),
-        script(src="https://unpkg.com/htmx.org@1.9.12", defer=True),
-    )
-
-
 # ── Full pages ───────────────────────────────────────────
 
 def build_home(css_hash="", js_hash=""):
@@ -380,8 +505,7 @@ def build_home(css_hash="", js_hash=""):
             main(
                 build_hero(),
                 build_ticker(),
-                build_projects(),
-                build_dashboard(),
+                build_home_previews(),
                 build_stack(),
                 class_="page-main",
             ),
@@ -400,3 +524,171 @@ def build_ssh_page(css_hash="", js_hash=""):
 
 def build_nas_page(css_hash="", js_hash=""):
     return _subpage_shell(NAS_PAGE, None, css_hash, js_hash)
+
+
+# ── Impressum ────────────────────────────────────────────
+
+def build_impressum_page(css_hash="", js_hash=""):
+    imp = IMPRESSUM
+
+    def row(label: str, *children):
+        return div(
+            span(label, class_="legal-key"),
+            div(*children, class_="legal-val"),
+            class_="legal-row",
+        )
+
+    content = [
+        section(
+            div(
+                a("← Zurück", href="/", class_="back-link"),
+                class_="subpage-back",
+            ),
+            h1("Impressum", class_="legal-page-title"),
+            p("Angaben gemäß § 5 TMG", class_="legal-subtitle"),
+
+            # Verantwortlicher
+            div(
+                h2("Verantwortlicher", class_="legal-section-title"),
+                row("Name",         span(imp["name"],       class_="legal-text")),
+                row("Anschrift",    span(imp["strasse"],    class_="legal-text"),
+                                    span(imp["ort"],        class_="legal-text")),
+                row("Rechtsform",   span(imp["rechtsform"], class_="legal-text")),
+                row("E-Mail",       a(imp["email"], href=f"mailto:{imp['email']}", class_="legal-link")),
+                class_="legal-block",
+            ),
+
+            # Hinweis Steuernummer
+            div(
+                h2("Steuerliche Angaben", class_="legal-section-title"),
+                p(
+                    "Eine Umsatzsteuer-Identifikationsnummer liegt derzeit nicht vor. "
+                    "Umsatzsteuerbefreiung gemäß § 19 UStG (Kleinunternehmerregelung) "
+                    "wird bei Bedarf separat kommuniziert.",
+                    class_="legal-prose",
+                ),
+                class_="legal-block",
+            ),
+
+            # Streitschlichtung
+            div(
+                h2("Streitschlichtung", class_="legal-section-title"),
+                p(
+                    "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: ",
+                    a("https://ec.europa.eu/consumers/odr",
+                      href="https://ec.europa.eu/consumers/odr",
+                      target="_blank", rel="noopener", class_="legal-link"),
+                    span(". Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren "
+                         "vor einer Verbraucherschlichtungsstelle teilzunehmen."),
+                    class_="legal-prose",
+                ),
+                class_="legal-block",
+            ),
+
+            # Haftung
+            div(
+                h2("Haftung für Inhalte", class_="legal-section-title"),
+                p(
+                    "Als Diensteanbieter sind wir gemäß § 7 Abs. 1 TMG für eigene Inhalte auf diesen Seiten "
+                    "nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als "
+                    "Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde "
+                    "Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige "
+                    "Tätigkeit hinweisen.",
+                    class_="legal-prose",
+                ),
+                class_="legal-block",
+            ),
+
+            class_="legal-page section-block",
+        ),
+    ]
+    return _page_shell(
+        "Impressum", "Impressum — NepiDesk",
+        "", content, css_hash, js_hash,
+    )
+
+
+# ── Datenschutz ──────────────────────────────────────────
+
+def build_datenschutz_page(css_hash="", js_hash=""):
+    ds = DATENSCHUTZ
+
+    def block(title: str, *paras):
+        return div(
+            h2(title, class_="legal-section-title"),
+            *[p(text, class_="legal-prose") for text in paras],
+            class_="legal-block",
+        )
+
+    content = [
+        section(
+            div(
+                a("← Zurück", href="/", class_="back-link"),
+                class_="subpage-back",
+            ),
+            h1("Datenschutzerklärung", class_="legal-page-title"),
+            p("Zuletzt aktualisiert: Juni 2025", class_="legal-subtitle"),
+
+            block(
+                "1. Verantwortlicher",
+                f"Verantwortlich im Sinne der DSGVO: {ds['verantwortlicher_name']}, "
+                f"erreichbar unter {ds['verantwortlicher_email']}.",
+            ),
+
+            block(
+                "2. Welche Daten wir erheben",
+                "Diese Website erhebt keine personenbezogenen Daten durch Tracking, "
+                "Cookies oder Analyse-Tools. Es werden keine Cookies gesetzt.",
+                "Beim Aufruf der Website werden durch den Webserver technisch notwendige "
+                "Server-Logs gespeichert (IP-Adresse, Zeitstempel, aufgerufene URL, "
+                "HTTP-Statuscode, verwendeter Browser). Diese Daten dienen ausschließlich "
+                "der technischen Fehlerdiagnose und werden nach spätestens 7 Tagen gelöscht.",
+            ),
+
+            block(
+                "3. Hosting & Infrastruktur",
+                f"Die Website wird auf einem eigenen, privat betriebenen Server in Deutschland gehostet. "
+                "Es werden keine externen Hosting-Anbieter eingesetzt.",
+                "Der Datenverkehr wird über Cloudflare (Cloudflare, Inc., 101 Townsend St., "
+                "San Francisco, CA 94107, USA) geleitet. Cloudflare agiert dabei als "
+                "Reverse-Proxy und kann dabei technische Metadaten (IP-Adresse, Request-Header) "
+                "verarbeiten. Die eigentliche IP-Adresse des Servers wird dabei nicht öffentlich "
+                "exponiert. Weitere Informationen: https://www.cloudflare.com/privacypolicy/",
+            ),
+
+            block(
+                "4. Kontaktaufnahme per E-Mail",
+                "Wenn Sie uns per E-Mail kontaktieren, werden die von Ihnen übermittelten Daten "
+                "(E-Mail-Adresse, ggf. Name und Nachrichteninhalt) ausschließlich zur Bearbeitung "
+                "Ihrer Anfrage verwendet. Diese Daten werden nicht an Dritte weitergegeben und "
+                "nach Abschluss der Anfrage gelöscht, sofern keine gesetzlichen Aufbewahrungsfristen bestehen.",
+            ),
+
+            block(
+                "5. Ihre Rechte",
+                "Sie haben jederzeit das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16 DSGVO), "
+                "Löschung (Art. 17 DSGVO), Einschränkung der Verarbeitung (Art. 18 DSGVO) sowie "
+                "Datenübertragbarkeit (Art. 20 DSGVO).",
+                "Zur Ausübung Ihrer Rechte genügt eine E-Mail an kontakt@nepidesk.de. "
+                "Sie haben zudem das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren.",
+            ),
+
+            block(
+                "6. Externe Links",
+                "Diese Website enthält Links zu externen Websites (z. B. PyPI, GitHub, Cloudflare). "
+                "Für die Datenschutzpraktiken dieser externen Anbieter übernehmen wir keine Verantwortung.",
+            ),
+
+            block(
+                "7. Aktualität",
+                "Wir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen, "
+                "etwa bei technischen Änderungen der Website oder neuen gesetzlichen Anforderungen.",
+            ),
+
+            class_="legal-page section-block",
+        ),
+    ]
+    return _page_shell(
+        "Datenschutz", "Datenschutzerklärung — NepiDesk",
+        "", content, css_hash, js_hash,
+    )
