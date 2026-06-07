@@ -1,12 +1,12 @@
 [Unit]
-Description=belchenstrasse5.de — htmforge Dashboard
+Description=nepidesk.de — htmforge Dashboard
 After=network.target
 
 [Service]
 Type=simple
 User=moritz
-WorkingDirectory=/home/moritz/belchenstrasse5
-ExecStart=/usr/bin/python3 -m gunicorn app:app -w 2 -b 127.0.0.1:5000
+WorkingDirectory=/home/moritz/nepidesk
+ExecStart=/usr/bin/python3 -m gunicorn app:app -w 2 -b 127.0.0.1:5100
 Restart=always
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1

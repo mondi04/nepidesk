@@ -1,5 +1,5 @@
 /**
- * belchenstrasse5.de · main.js
+ * nepidesk.de · main.js
  * - Parallax (Hero)
  * - Scroll Reveal + Typewriter (IntersectionObserver)
  * - Stack bar animation
