@@ -264,10 +264,7 @@ def _head(page_title: str, description: str, css_hash: str = ""):
         meta(property="og:url",         content=SITE_URL),
         title(page_title),
         link(rel="canonical", href=SITE_URL),
-        link(rel="preconnect", href="https://fonts.googleapis.com"),
-        link(rel="preconnect", href="https://fonts.gstatic.com", crossorigin=""),
-        link(rel="stylesheet",
-             href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap"),
+        link(rel="stylesheet", href="/static/css/fonts.css"),
         link(rel="stylesheet", href=f"/static/css/main.css?v={css_hash}"),
         script(src="https://unpkg.com/htmx.org@1.9.12", defer=True),
     )
