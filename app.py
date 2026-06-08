@@ -4,7 +4,7 @@ Flask App. Nur Routes.
 """
 
 import hashlib
-from flask import Flask, Response
+from flask import Flask, Response, send_from_directory
 from components import (
     build_home,
     build_ssh_page,
@@ -83,6 +83,14 @@ def nas():
 @app.route("/toast/copy")
 def toast_copy():
     return Response(render(build_toast_success()), mimetype="text/html")
+
+@app.route("/robots.txt")
+def robots():
+    return send_from_directory("static", "robots.txt")
+
+@app.route("/sitemap.xml")
+def sitemap():
+    return send_from_directory("static", "sitemap.xml")
 
 
 if __name__ == "__main__":

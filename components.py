@@ -253,20 +253,42 @@ def build_toast_success():
 # ── Head helper ──────────────────────────────────────────
 
 def _head(page_title: str, description: str, css_hash: str = ""):
+    json_ld = """{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Moritz Mond",
+  "url": "https://nepidesk.de",
+  "jobTitle": "Freelance Developer",
+  "description": "Freelance-Entwickler mit Fokus auf Python Web Development, IT-Security und self-hosted Open-Source-Tools.",
+  "sameAs": [
+    "https://github.com/mondi04",
+    "https://pypi.org/user/mondi04/"
+  ]
+}"""
     return head(
         meta(charset="UTF-8"),
         meta(name="viewport", content="width=device-width, initial-scale=1.0"),
         meta(name="description", content=description),
         meta(name="author",      content="Moritz · NepiDesk"),
+        meta(name="robots",      content="index, follow"),
         meta(property="og:title",       content=page_title),
         meta(property="og:description", content=description),
         meta(property="og:type",        content="website"),
         meta(property="og:url",         content=SITE_URL),
+        meta(property="og:site_name",   content="NepiDesk"),
+        meta(property="og:locale",      content="de_DE"),
+        meta(name="twitter:card",        content="summary"),
+        meta(name="twitter:title",       content=page_title),
+        meta(name="twitter:description", content=description),
         title(page_title),
         link(rel="canonical", href=SITE_URL),
         link(rel="stylesheet", href="/static/css/fonts.css"),
         link(rel="stylesheet", href=f"/static/css/main.css?v={css_hash}"),
+        link(rel="icon", href="/static/favicon.ico"),
+        link(rel="icon", type="image/png", sizes="32x32", href="/static/favicon-32x32.png"),
+        link(rel="apple-touch-icon", sizes="180x180", href="/static/apple-touch-icon.png"),
         script(src="https://unpkg.com/htmx.org@1.9.12", defer=True),
+        script(type="application/ld+json", _content=json_ld),
     )
 
 
