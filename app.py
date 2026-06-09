@@ -7,8 +7,6 @@ import hashlib
 from flask import Flask, Response, send_from_directory
 from components import (
     build_home,
-    build_ssh_page,
-    build_nas_page,
     build_toast_success,
     build_opensource_page,
     build_software_page,
@@ -18,7 +16,8 @@ from components import (
 )
 from htmforge import render
 
-app = Flask(__name__, static_folder="static")
+app = Flask(__name__, static_folder="static", static_url_path="/static")
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 31536000
 
 
 def _h(path: str) -> str:

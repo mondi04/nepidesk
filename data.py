@@ -33,7 +33,7 @@ HERO_CLAIM   = "Software. Security. Open Source."
 HERO_SUB     = (
     "Freelance-Entwickler mit Fokus auf Python Web Development, "
     "IT-Security und self-hosted Open-Source-Tools. "
-    "Ich baue Dinge, die funktionieren — und zeige wie."
+    "Wir bauen Dinge, die funktionieren — und zeigen wie."
 )
 
 # ── Ticker ────────────────────────────────────────────────
@@ -53,7 +53,7 @@ HOME_OSS_PREVIEW = {
     "emoji":   "⚒️",
     "tagline": "Python-Bibliotheken, MIT-lizenziert",
     "desc": (
-        "Ich entwickle und pflege Open-Source-Bibliotheken, die aus echten "
+        "Wir entwickeln und pflegen Open-Source-Bibliotheken, die aus echten "
         "Projekten entstehen — kein Spielzeug, sondern produktiv eingesetzter Code. "
         "Aktuell zwei Pakete auf PyPI."
     ),

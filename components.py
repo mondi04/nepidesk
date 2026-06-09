@@ -252,7 +252,7 @@ def build_toast_success():
 
 # ── Head helper ──────────────────────────────────────────
 
-def _head(page_title: str, description: str, css_hash: str = ""):
+def _head(page_title: str, description: str, css_hash: str = "", canonical: str = SITE_URL):
     json_ld = """{
   "@context": "https://schema.org",
   "@type": "Person",
@@ -274,28 +274,32 @@ def _head(page_title: str, description: str, css_hash: str = ""):
         meta(property="og:title",       content=page_title),
         meta(property="og:description", content=description),
         meta(property="og:type",        content="website"),
-        meta(property="og:url",         content=SITE_URL),
+        meta(property="og:url",         content=canonical),
         meta(property="og:site_name",   content="NepiDesk"),
         meta(property="og:locale",      content="de_DE"),
-        meta(name="twitter:card",        content="summary"),
+        meta(property="og:image",       content=SITE_URL + "/static/og-image.png"),
+        meta(property="og:image:width",  content="1200"),
+        meta(property="og:image:height", content="630"),
+        meta(property="og:image:alt",    content="NepiDesk - Python · Security · Open Source"),
+        meta(name="twitter:image",       content=SITE_URL + "/static/og-image.png"),
+        meta(name="twitter:card",        content="summary_large_image"),
         meta(name="twitter:title",       content=page_title),
         meta(name="twitter:description", content=description),
         title(page_title),
-        link(rel="canonical", href=SITE_URL),
+        link(rel="canonical", href=canonical),
         link(rel="stylesheet", href="/static/css/fonts.css"),
         link(rel="stylesheet", href=f"/static/css/main.css?v={css_hash}"),
-        link(rel="icon", href="/static/favicon.ico"),
-        link(rel="icon", type="image/png", sizes="32x32", href="/static/favicon-32x32.png"),
+        link(rel="icon", type="image/x-icon", href="/static/favicon.ico"),
         link(rel="apple-touch-icon", sizes="180x180", href="/static/apple-touch-icon.png"),
-        script(src="https://unpkg.com/htmx.org@1.9.12", defer=True),
+        script(src=f"/static/js/htmx.min.js?v={css_hash}", defer=True),
         script(type="application/ld+json", _content=json_ld),
     )
 
 
-def _page_shell(page_title: str, description: str, active: str, content, css_hash="", js_hash=""):
+def _page_shell(page_title: str, description: str, active: str, content, css_hash="", js_hash="", canonical: str = SITE_URL):
     """Generische Seiten-Shell für alle Unterseiten."""
     page = html(
-        _head(page_title + " — NepiDesk", description, css_hash),
+        _head(page_title + " — NepiDesk", description, css_hash, canonical),
         body(
             build_header(active),
             main(*content, class_="page-main"),
@@ -363,6 +367,7 @@ def build_opensource_page(css_hash="", js_hash=""):
     return _page_shell(
         "Open Source", "Python-Bibliotheken von NepiDesk — MIT-lizenziert, auf PyPI.",
         "opensource", content, css_hash, js_hash,
+        canonical=SITE_URL + "/opensource",
     )
 
 
@@ -405,6 +410,7 @@ def build_software_page(css_hash="", js_hash=""):
     return _page_shell(
         "Software", "Kommerzielle und interne Software-Projekte von NepiDesk.",
         "software", content, css_hash, js_hash,
+        canonical=SITE_URL + "/software",
     )
 
 
@@ -460,6 +466,7 @@ def build_infra_page(css_hash="", js_hash=""):
     return _page_shell(
         "Infra", "Live-Monitoring der NepiDesk Infrastruktur — Prometheus, Grafana, self-hosted.",
         "infra", content, css_hash, js_hash,
+        canonical=SITE_URL + "/infra",
     )
 
 
@@ -535,14 +542,6 @@ def build_home(css_hash="", js_hash=""):
         lang="de",
     )
     return "<!DOCTYPE html>\n" + render(page)
-
-
-def build_ssh_page(css_hash="", js_hash=""):
-    return _subpage_shell(SSH_PAGE, None, css_hash, js_hash)
-
-
-def build_nas_page(css_hash="", js_hash=""):
-    return _subpage_shell(NAS_PAGE, None, css_hash, js_hash)
 
 
 # ── Impressum ────────────────────────────────────────────
@@ -624,6 +623,7 @@ def build_impressum_page(css_hash="", js_hash=""):
     return _page_shell(
         "Impressum", "Impressum — NepiDesk",
         "", content, css_hash, js_hash,
+        canonical=SITE_URL + "/impressum",
     )
 
 
@@ -710,4 +710,5 @@ def build_datenschutz_page(css_hash="", js_hash=""):
     return _page_shell(
         "Datenschutz", "Datenschutzerklärung — NepiDesk",
         "", content, css_hash, js_hash,
+        canonical=SITE_URL + "/datenschutz"
     )
