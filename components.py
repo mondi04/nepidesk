@@ -287,6 +287,8 @@ def _head(page_title: str, description: str, css_hash: str = "", canonical: str 
         meta(name="twitter:description", content=description),
         title(page_title),
         link(rel="canonical", href=canonical),
+        link(rel="preload", href="/static/css/fonts.css", as_="style"),
+        link(rel="preload", href=f"/static/css/main.css?v={css_hash}", as_="style"),
         link(rel="stylesheet", href="/static/css/fonts.css"),
         link(rel="stylesheet", href=f"/static/css/main.css?v={css_hash}"),
         link(rel="icon", type="image/x-icon", href="/static/favicon.ico"),
