@@ -10,6 +10,12 @@ ExecStart=/opt/nepidesk/venv/bin/gunicorn app:app -w 2 -b 127.0.0.1:5100
 Restart=always
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
+# Kontaktformular — Migadu SMTP-Zugangsdaten (nicht im Code hinterlegen!)
+# Environment=NEPIDESK_CONTACT_TO=kontakt@nepidesk.de
+# Environment=NEPIDESK_SMTP_HOST=smtp.migadu.com
+# Environment=NEPIDESK_SMTP_PORT=465
+# Environment=NEPIDESK_SMTP_USER=kontakt@nepidesk.de
+# Environment=NEPIDESK_SMTP_PASS=CHANGE_ME
 
 [Install]
 WantedBy=multi-user.target

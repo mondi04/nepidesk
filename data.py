@@ -3,18 +3,22 @@ NepiDesk — nepidesk.de
 Alle Inhalte. Keine Logik, keine htmforge-Imports.
 """
 
+from config import IMPRESSUM_NAME, IMPRESSUM_STRASSE, IMPRESSUM_ORT, IMPRESSUM_EMAIL
+
 HTMFORGE_VERSION = "0.4.0"
 SITE_NAME        = "NepiDesk"
 SITE_URL         = "https://nepidesk.de"
 SITE_AUTHOR      = "Mondi"
 
 # ── Impressum ─────────────────────────────────────────────
+# Werte kommen aus config.py / .env — Privatadresse gehört nicht in den
+# öffentlichen Source-Code.
 IMPRESSUM = {
-    "name":          "Moritz Mond",
-    "strasse":       "Belchenstrasse 5",
-    "ort":           "79677, Aitern",
-    "email":         "kontakt@nepidesk.de",
-    "rechtsform":    "Privatperson",
+    "name":       IMPRESSUM_NAME,
+    "strasse":    IMPRESSUM_STRASSE,
+    "ort":        IMPRESSUM_ORT,
+    "email":      IMPRESSUM_EMAIL,
+    "rechtsform": "Privatperson",
     # Sobald du ein Gewerbe anmeldest:
     # "steuernummer": "XX/XXX/XXXXX",
     # "ustid":        "DE XXXXXXXXX",
@@ -22,31 +26,113 @@ IMPRESSUM = {
 
 # ── Datenschutz ───────────────────────────────────────────
 DATENSCHUTZ = {
-    "verantwortlicher_name":  "Moritz Mond",
-    "verantwortlicher_email": "kontakt@nepidesk.de",
+    "verantwortlicher_name":  IMPRESSUM_NAME,
+    "verantwortlicher_email": IMPRESSUM_EMAIL,
     "hosting":                "Eigener Server (Self-hosted, Deutschland)",
-    "cloudflare":             True,   # Cloudflare Tunnel im Einsatz
+    "cloudflare":             True,
 }
 
 # ── Hero ──────────────────────────────────────────────────
-HERO_CLAIM   = "Software. Security. Open Source."
-HERO_SUB     = (
-    "Freelance-Entwickler mit Fokus auf Python Web Development, "
-    "IT-Security und self-hosted Open-Source-Tools. "
-    "Wir bauen Dinge, die funktionieren — und zeigen wie."
+# Hauptgeschäft: Websites für Kunden. Steht jetzt zuerst, nicht mehr am Ende.
+HERO_CLAIM = "Individuelle Websites für Kunden."
+HERO_SUB = (
+    "Freelance-Entwickler mit Fokus auf Python Web Development — "
+    "Websites für Vereine, Selbstständige und kleine Unternehmen. "
+    "Dazu Open-Source-Tools und self-hosted Infrastruktur, "
+    "aus derselben Werkstatt."
 )
 
 # ── Ticker ────────────────────────────────────────────────
 TICKER_ITEMS = [
-    {"key": "FOCUS",    "value": "Python · Security · Web",    "detail": "Backend-Entwicklung, Pentesting, Open-Source"},
-    {"key": "STACK",    "value": "Flask · htmforge · HTMX",    "detail": "Kein Bloat, kein Template-Engine-Overkill"},
-    {"key": "HOSTING",  "value": "Self-hosted",                "detail": "Cloudflare Tunnel — kein offener Port, kein Nginx"},
-    {"key": "OSS",      "value": "Open Source",                "detail": "htmforge auf PyPI — MIT + Commons Clause"},
-    {"key": "SECURITY", "value": "Zero Trust",                 "detail": "WAF, Tunnel, Ed25519 — Security by design"},
+    {"key": "FOCUS",    "value": "Websites für Kunden",         "detail": "Vereine, Selbstständige, kleine Unternehmen"},
+    {"key": "STACK",    "value": "Flask · htmforge · HTMX",     "detail": "Kein Bloat, kein Template-Engine-Overkill"},
+    {"key": "HOSTING",  "value": "Self-hosted",                 "detail": "Cloudflare Tunnel — kein offener Port, kein Nginx"},
+    {"key": "OSS",      "value": "Open Source",                 "detail": "htmforge auf PyPI — MIT + Commons Clause"},
+    {"key": "SECURITY", "value": "Zero Trust",                  "detail": "WAF, Tunnel, Ed25519 — Security by design"},
+]
+
+# ── Kundenprojekte (Hauptgeschäft) ────────────────────────
+KUNDEN_INTRO = (
+    "Individuelle Websites für Vereine, Selbstständige und kleine Unternehmen — "
+    "kein Baukasten, kein WordPress-Plugin-Chaos, sondern handgeschriebener, "
+    "schneller Code, der zu 100 % zum Kunden passt."
+)
+
+KUNDEN_PROJECTS = [
+    {
+        "emoji": "🏕️",
+        "label": "Vereinslösungen",
+        "tagline": "Verein · Wiki & Mitgliederportal · Fotogalerie",
+        "desc": (
+            "Self-hosted Wiki- und Informationssystem für einen Verein, "
+            "inkl. individuellem Design-System und News-/Rezepte-Feeds."
+        ),
+        "meta": [("Typ", "Verein"), ("Stack", "Wiki.js · GraphQL · JS")],
+        "url": "",  # TODO: echte URL eintragen, falls öffentlich verlinkbar
+    },
+    {
+        "emoji": "🛠️",
+        "label": "Handwerksbetrieb",
+        "tagline": "Kleines Unternehmen · Portfolio & Kontakt",
+        "desc": (
+            "Individuelle Website für einen Handwerksbetrieb, "
+            "inkl. Portfolio, Kontaktformular und DSGVO-konformer Umsetzung."
+        ),
+        "meta": [("Typ", "Kleines Unternehmen"), ("Stack", "Flask · htmforge · HTMX")],
+        "url": "",  # TODO: echte URL eintragen, falls öffentlich verlinkbar
+    },
+    {
+        "emoji": "🎨",
+        "label": "Kreativagentur",
+        "tagline": "Selbstständige · Portfolio & Blog",
+        "desc": (
+            "Website für eine Kreativagentur, mit Portfolio, Blog und "
+            "individuellem Design-System."
+        ),
+        "meta": [("Typ", "Selbstständige"), ("Stack", "Flask · htmforge · HTMX")],
+        "url": "",  # TODO: echte URL eintragen, falls öffentlich verlinkbar
+    },
+    {
+        "emoji": "💼",
+        "label": "Beratungsfirma",
+        "tagline": "Kleines Unternehmen · Portfolio & Kontakt",
+        "desc": (
+            "Individuelle Website für eine Beratungsfirma, "
+            "inkl. Portfolio, Kontaktformular und DSGVO-konformer Umsetzung."
+        ),
+        "meta": [("Typ", "Kleines Unternehmen"), ("Stack", "Flask · htmforge · HTMX")],
+        "url": "",  # TODO: echte URL eintragen, falls öffentlich verlinkbar
+    }
 ]
 
 # ── Home Preview Cards ────────────────────────────────────
-# Teaser-Karten auf der Startseite für OSS und Software
+HOME_KUNDEN_PREVIEW = {
+    "label":   "Kundenprojekte",
+    "emoji":   "🌐",
+    "tagline": "Individuelle Websites",
+    "desc": (
+        "Vereine, Selbstständige, kleine Unternehmen — von der Idee bis zum "
+        "Go-Live, inklusive Hosting und Betreuung danach."
+    ),
+    "count":   f"{len(KUNDEN_PROJECTS)} Projekte",
+    "url":     "/kunden",
+    "cta":     "Ansehen →",
+    "tag":     "kunde",
+}
+
+HOME_TARIFE_PREVIEW = {
+    "label":   "Tarife",
+    "emoji":   "💶",
+    "tagline": "Sorglos oder Flex — transparente Preise",
+    "desc": (
+        "Zwei Vertragsmodelle für Website-Hosting, klar kalkuliert. "
+        "Kein Kleingedrucktes, keine versteckten Kosten."
+    ),
+    "count":   "Ab 9,99€ / Monat",
+    "url":     "/tarife",
+    "cta":     "Preise ansehen →",
+    "tag":     "dev",
+}
 
 HOME_OSS_PREVIEW = {
     "label":   "Open Source",
@@ -181,16 +267,9 @@ STACK = [
     {"name": "Gunicorn",   "role": "WSGI Production Server",          "url": "https://gunicorn.org/",                "bar": 70},
 ]
 
-# ── Grafana ───────────────────────────────────────────────
-GRAFANA_BASE = (
-    "https://monitoring.belchenstrasse5.de/d-solo/rYdddlPWk/node-exporter-full"
-    "?orgId=1&timezone=browser"
-    "&var-ds_prometheus=ef6exteo9p8g0e"
-    "&var-job=node&var-nodename=g7"
-    "&var-node=192.168.179.10:9100"
-    "&refresh=1m"
-    "&__feature.dashboardSceneSolo=true"
-)
+# ── Infra Stack Info ──────────────────────────────────────
+# GRAFANA_BASE kommt jetzt NICHT mehr aus data.py, sondern direkt aus
+# config.py in components/infra.py — steht deshalb hier absichtlich nicht mehr.
 GRAFANA_PANELS = [
     {"id": "panel-20",  "label": "CPU Usage", "cols": 1, "height": 200},
     {"id": "panel-155", "label": "RAM Usage", "cols": 1, "height": 200},
@@ -199,7 +278,6 @@ GRAFANA_PANELS = [
     {"id": "panel-78",  "label": "RAM Graph", "cols": 1, "height": 240},
 ]
 
-# ── Infra Stack Info ──────────────────────────────────────
 INFRA_INFO = [
     ("STACK",   "Prometheus + Node Exporter"),
     ("REFRESH", "1 Minute"),
@@ -208,37 +286,132 @@ INFRA_INFO = [
     ("STATUS",  "Operational ✓"),
 ]
 
-# ── Unterseiten (SSH, NAS) ────────────────────────────────
-SSH_PAGE = {
-    "title":   "SSH Terminal",
-    "tagline": "Sicherer Web-Zugriff ohne VPN",
-    "intro": (
-        "Wir nutzen ttyd als Web-Terminal, abgesichert durch Cloudflare WAF, "
-        "Rate-Limiting und HTTP Basic Auth. Kein offener SSH-Port, kein VPN — "
-        "nur ein Cloudflare Tunnel zwischen Browser und Server."
+# ── Tarife ────────────────────────────────────────────────
+# Entspricht §2/§3 der Verträge "Sorglos" und "Flex".
+
+TARIFE_INTRO = (
+    "Zwei Vertragsmodelle, klar kalkuliert. Hosting, Domain, SSL und Backups "
+    "sind in beiden Modellen identisch — der Unterschied liegt darin, wie "
+    "Änderungen an deiner Website abgerechnet werden."
+)
+
+# Leistungen, die in BEIDEN Vertragsmodellen identisch enthalten sind (§2)
+TARIFE_GRUNDLEISTUNGEN = [
+    ("Website-Technologie", "Python-basierte Webanwendung (Flask/htmforge)"),
+    ("SSL-Zertifikat",      "Inklusive via Cloudflare, Datenweitergabe in AVV geregelt"),
+    ("Backups",             "Täglich, 7 Tage Aufbewahrung"),
+    ("Uptime-Ziel",         "99 % pro Kalendermonat"),
+    ("Domain (INWX.de)",    "Wird von uns registriert und verwaltet — verbleibt nach Vertragsende beim Auftraggeber"),
+]
+
+VERTRAGSMODELLE = [
+    {
+        "id":        "sorglos",
+        "name":      "Sorglos",
+        "tagline":   "Planbare Kosten, festes Stundenkontingent",
+        "einrichtung": 200,
+        "hosting":   7.99,
+        "highlight": True,
+        "badge":     "Empfehlung",
+        "desc": (
+            "Du wählst ein monatliches Anpassungskontingent (siehe unten) und "
+            "zahlst dafür einen festen Betrag. Änderungen darüber hinaus werden "
+            "mit 30 €/Std. abgerechnet (10-Minuten-Taktung)."
+        ),
+        "features": [
+            "Einmalige Einrichtung: 200 €",
+            "Hosting-Gebühr: 7,99 €/Monat (Server + Domain)",
+            "Inkludierte Anpassungsstunden gemäß gewähltem Stundenkontingent",
+            "Änderungsstundensatz zusätzlich: 30 €/Std. (10-Min-Taktung)",
+            "E-Mail optional: ab 5 €/Monat",
+        ],
+        "cta_label": "Sorglos anfragen",
+    },
+    {
+        "id":        "flex",
+        "name":      "Flex",
+        "tagline":   "Nur zahlen, was wirklich gebraucht wird",
+        "einrichtung": 400,
+        "hosting":   7.99,
+        "highlight": False,
+        "badge":     "",
+        "desc": (
+            "Keine festen Anpassungsstunden — du zahlst nur die Hosting-Gebühr. "
+            "Jede Änderung wird nach Aufwand mit 50 €/Std. abgerechnet "
+            "(10-Minuten-Taktung)."
+        ),
+        "features": [
+            "Einmalige Einrichtung: 400 €",
+            "Hosting-Gebühr: 7,99 €/Monat (Server + Domain)",
+            "Keine inkludierten Anpassungsstunden",
+            "Änderungsstundensatz: 50 €/Std. (10-Min-Taktung)",
+            "E-Mail optional: ab 5 €/Monat",
+        ],
+        "cta_label": "Flex anfragen",
+    },
+]
+
+STUNDENKONTINGENTE = [
+    {"name": "Basis",     "stunden": "1 Stunde Anpassung / Monat",      "preis": 15},
+    {"name": "Komfort",   "stunden": "2 Stunden Anpassung / Monat",     "preis": 25},
+    {"name": "Erweitert", "stunden": "3 Stunden Anpassung / Monat",     "preis": 35},
+    {"name": "Intensiv",  "stunden": "bis zu 5 Std. Anpassung / Monat", "preis": 55},
+]
+
+STUNDENKONTINGENT_HINWEIS = (
+    "Nicht in Anspruch genommene Stunden verfallen am Ende des jeweiligen "
+    "Kalendermonats und werden nicht übertragen. Zusätzliche Stunden über das "
+    "gewählte Kontingent hinaus werden gemäß Änderungsstundensatz (30 €/Std.) "
+    "abgerechnet."
+)
+
+EMAIL_ADDON = {
+    "name":                  "E-Mail (Migadu)",
+    "grundgebuehr":          5,
+    "inklusive_postfaecher": 3,
+    "inklusive_groesse":     "1 GB",
+    "weiteres_postfach":     2,
+    "desc": (
+        "3 professionelle E-Mail-Postfächer auf deiner eigenen Domain, je 1 GB "
+        "Speicher, inklusive. Jedes weitere Postfach kostet 2 €/Monat zusätzlich."
+        "Nach weiterer Absprache können auch größere Postfächer oder zusätzliche Features (z. B. "
+        "automatische Backups) hinzugefügt werden."
     ),
-    "how": [
-        ("Cloudflare Tunnel",   "Verbindet den Server mit Cloudflare — ohne eingehende Firewall-Regel."),
-        ("WAF Rate-Limiting",   "Cloudflares WAF blockt Brute-Force automatisch nach 5 Fehlversuchen."),
-        ("Basic Auth",          "Einfaches Passwort als erste Verteidigungslinie vor dem Terminal."),
-        ("Ed25519 Keys",        "Passwort-Login auf dem Server deaktiviert — nur Key-Auth erlaubt."),
-        ("ttyd",                "Leichtgewichtiger Web-Terminal-Server, läuft als systemd-Service."),
-    ],
 }
 
-NAS_PAGE = {
-    "title":   "NAS Storage",
-    "tagline": "Redundanter Speicher, kein Cloud-Abo",
-    "intro": (
-        "Zwei NAS-Geräte (Synology + Buffalo) im lokalen Netz, "
-        "synchronisiert per rsync. Medien, Backups, Konfigurationsdaten — "
-        "alles lokal, alles unter Kontrolle."
-    ),
-    "how": [
-        ("Synology nas1",    "Primärer NAS — RAID, Medien, aktive Projektdaten."),
-        ("Buffalo nas2",     "Backup-NAS — nächtlicher rsync-Sync von nas1."),
-        ("rsync via Cron",   "Automatischer Abgleich täglich um 02:00 Uhr."),
-        ("Cloudflare Tunnel","Zugriff auf das NAS-UI von überall — ohne Port-Forwarding."),
-        ("Netgear GS308E",   "Managed Switch mit VLAN-Isolation für NAS-Traffic."),
-    ],
-}
+TARIFE_FAQ = [
+    ("Sorglos oder Flex — was passt zu mir?",
+     "Wer regelmäßig kleine Anpassungen braucht, fährt mit Sorglos meist günstiger. "
+     "Wer nach dem Launch kaum noch Änderungen braucht, spart mit Flex."),
+    ("Was zählt als 'Änderung'?",
+     "Jede inhaltliche oder technische Anpassung an der bestehenden Website — "
+     "abgerechnet in 10-Minuten-Schritten, damit auch kleine Anfragen fair "
+     "berechnet werden."),
+    ("Kann ich später zwischen Sorglos und Flex wechseln?",
+     "Ja, ein Wechsel ist zum nächsten Abrechnungsmonat jederzeit möglich."),
+    ("Ist die Domain danach meine?",
+     "Ja — die Domain wird zwar von uns über INWX registriert und verwaltet, "
+     "verbleibt nach Vertragsende aber beim Auftraggeber."),
+]
+
+# ── Kontakt ───────────────────────────────────────────────
+KONTAKT_INTRO = (
+    "Fragen zu einem Vertragsmodell, ein individuelles Projekt oder einfach "
+    "Interesse? Schreib mir — ich melde mich in der Regel innerhalb von 24 bis "
+    "48 Stunden zurück."
+)
+
+KONTAKT_INFO = [
+    ("E-MAIL",     "kontakt@nepidesk.de"),
+    ("REAKTION",   "24–48 Stunden"),
+    ("STANDORT",   "Schwarzwald, Deutschland"),
+    ("SPRACHEN",   "Deutsch · Englisch"),
+]
+
+KONTAKT_BETREFF_OPTIONS = [
+    ("Vertrag Sorglos",       "sorglos"),
+    ("Vertrag Flex",          "flex"),
+    ("E-Mail-Hosting",        "email-hosting"),
+    ("Individuelles Projekt", "individuell"),
+    ("Sonstiges",             "sonstiges"),
+]
