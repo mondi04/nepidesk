@@ -35,12 +35,52 @@ def _kunden_project_card(proj: dict, index: int):
     )
 
 
+def _kunden_trust_bar():
+    items = [
+        ("📁", f"{len(KUNDEN_PROJECTS)} abgeschlossene Projekte"),
+        ("⚡", "Handgeschriebener Code, kein Baukasten"),
+        ("⏱️", "Antwort in 24–48 Stunden"),
+        ("🔒", "DSGVO-konforme Umsetzung"),
+    ]
+    chips = [
+        div(span(icon, class_="trust-icon"), span(label), class_="trust-item")
+        for icon, label in items
+    ]
+    return div(*chips, class_="trust-bar reveal")
+
+
+def _ablauf_steps():
+    steps = [
+        ("01", "Anfrage", "Kurze Nachricht was du vorhast — ich melde mich innerhalb von 24–48 Stunden."),
+        ("02", "Konzept & Angebot", "Gemeinsam klären wir Umfang, Design-Richtung und welches Tarifmodell passt."),
+        ("03", "Umsetzung", "Handgeschriebener Code, regelmäßige Zwischenstände — keine Blackbox."),
+        ("04", "Launch & Support", "Deine Website geht live, Hosting und Anpassungen laufen über dein gewähltes Modell weiter."),
+    ]
+    cards = [
+        div(
+            span(num, class_="process-num"),
+            h3(title, class_="process-title"),
+            p(desc, class_="process-desc"),
+            class_="process-step reveal",
+            data_delay=str(i * 80),
+        )
+        for i, (num, title, desc) in enumerate(steps)
+    ]
+    return div(*cards, class_="process-steps")
+
+
 def build_kunden_page(css_hash="", js_hash=""):
     cards = [_kunden_project_card(p, i) for i, p in enumerate(KUNDEN_PROJECTS)]
     content = [
         section(
             section_head("01", "Kundenprojekte", KUNDEN_INTRO),
+            _kunden_trust_bar(),
             div(*cards, class_="oss-grid"),
+            class_="section-block",
+        ),
+        section(
+            section_head("02", "So läuft's ab", "Vier Schritte von der Anfrage bis zur laufenden Website."),
+            _ablauf_steps(),
             class_="section-block",
         ),
         section(
