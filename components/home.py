@@ -10,7 +10,7 @@ from htmforge.elements import div, span, a, p, h3, section, html, body, main, sc
 from data import (
     HERO_CLAIM, HERO_SUB, TICKER_ITEMS, STACK,
     HOME_KUNDEN_PREVIEW, HOME_OSS_PREVIEW, HOME_SOFTWARE_PREVIEW,
-    HOME_INFRA_PREVIEW, HOME_TARIFE_PREVIEW,
+    HOME_INFRA_PREVIEW, HOME_TARIFE_PREVIEW, HOME_EMAIL_PREVIEW
 )
 from .shared import tag_chip, section_head, _head
 from .header import build_header
@@ -90,6 +90,7 @@ def build_home_previews():
     previews = [
         HOME_KUNDEN_PREVIEW,
         HOME_TARIFE_PREVIEW,
+        HOME_EMAIL_PREVIEW,
         HOME_SOFTWARE_PREVIEW,
         HOME_OSS_PREVIEW,
         HOME_INFRA_PREVIEW,

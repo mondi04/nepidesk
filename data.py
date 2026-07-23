@@ -5,7 +5,7 @@ Alle Inhalte. Keine Logik, keine htmforge-Imports.
 
 from config import IMPRESSUM_NAME, IMPRESSUM_STRASSE, IMPRESSUM_ORT, IMPRESSUM_EMAIL
 
-HTMFORGE_VERSION = "0.4.0"
+HTMFORGE_VERSION = "0.5.1"
 SITE_NAME        = "NepiDesk"
 SITE_URL         = "https://nepidesk.de"
 SITE_AUTHOR      = "Mondi"
@@ -125,13 +125,27 @@ HOME_TARIFE_PREVIEW = {
     "emoji":   "💶",
     "tagline": "Sorglos oder Flex — transparente Preise",
     "desc": (
-        "Zwei Vertragsmodelle für Website-Hosting, klar kalkuliert. "
+        "Zwei fertige Vertragsmodelle für Website-Hosting, klar kalkuliert. "
         "Kein Kleingedrucktes, keine versteckten Kosten."
     ),
-    "count":   "Ab 9,99€ / Monat",
+    "count":   "Ab 7,99€ / Monat",
     "url":     "/tarife",
     "cta":     "Preise ansehen →",
     "tag":     "dev",
+}
+
+HOME_EMAIL_PREVIEW = {
+    "label":   "E-Mail Hosting (Optional zur Website)",
+    "emoji":   "📧",
+    "tagline": "Professionelle E-Mail auf eigener Domain",
+    "desc": (
+        "3 Postfächer inklusive, optional erweiterbar. "
+        "Inklusive Spam-Filter, TLS-Verschlüsselung und DSGVO-konformem Hosting."
+    ),
+    "count":   "5€/Monat",
+    "url":     "/tarife#email-addon",
+    "cta":     "E-Mail ansehen →",
+    "tag":     "email",
 }
 
 HOME_OSS_PREVIEW = {
@@ -197,7 +211,8 @@ OSS_PROJECTS = [
             ("Status",   "Aktiv"),
         ],
         "links": [
-            {"label": "Docs →",   "url": "https://htmforge.nepidesk.de", "primary": True},
+            {"label": "Docs →",   "url": "https://mondi04.github.io/htmforge/", "primary": True},
+            {"label": "Beispiel ↗", "url": "https://htmforge.nepidesk.de", "primary": True},
             {"label": "PyPI ↗",   "url": "https://pypi.org/project/htmforge/", "primary": False},
         ],
         "tag": "oss",
@@ -290,7 +305,7 @@ INFRA_INFO = [
 # Entspricht §2/§3 der Verträge "Sorglos" und "Flex".
 
 TARIFE_INTRO = (
-    "Zwei Vertragsmodelle, klar kalkuliert. Hosting, Domain, SSL und Backups "
+    "Zwei Vertragsmodelle, klar kalkuliert. Hosting, Domain, SSL und DB-Backups "
     "sind in beiden Modellen identisch — der Unterschied liegt darin, wie "
     "Änderungen an deiner Website abgerechnet werden."
 )
@@ -299,7 +314,7 @@ TARIFE_INTRO = (
 TARIFE_GRUNDLEISTUNGEN = [
     ("Website-Technologie", "Python-basierte Webanwendung (Flask/htmforge)"),
     ("SSL-Zertifikat",      "Inklusive via Cloudflare, Datenweitergabe in AVV geregelt"),
-    ("Backups",             "Täglich, 7 Tage Aufbewahrung"),
+    ("DB-Backups",             "Täglich, 7 Tage Aufbewahrung"),
     ("Uptime-Ziel",         "99 % pro Kalendermonat"),
     ("Domain (INWX.de)",    "Wird von uns registriert und verwaltet — verbleibt nach Vertragsende beim Auftraggeber"),
 ]
@@ -309,20 +324,20 @@ VERTRAGSMODELLE = [
         "id":        "sorglos",
         "name":      "Sorglos",
         "tagline":   "Planbare Kosten, festes Stundenkontingent",
-        "einrichtung": 200,
+        "einrichtung": 300,
         "hosting":   7.99,
         "highlight": True,
         "badge":     "Empfehlung",
         "desc": (
             "Du wählst ein monatliches Anpassungskontingent (siehe unten) und "
             "zahlst dafür einen festen Betrag. Änderungen darüber hinaus werden "
-            "mit 30 €/Std. abgerechnet (10-Minuten-Taktung)."
+            "mit 35 €/Std. abgerechnet (10-Minuten-Taktung)."
         ),
         "features": [
-            "Einmalige Einrichtung: 200 €",
+            "Einmalige Einrichtung: 300 €",
             "Hosting-Gebühr: 7,99 €/Monat (Server + Domain)",
             "Inkludierte Anpassungsstunden gemäß gewähltem Stundenkontingent",
-            "Änderungsstundensatz zusätzlich: 30 €/Std. (10-Min-Taktung)",
+            "Änderungsstundensatz zusätzlich: 35 €/Std. (10-Min-Taktung)",
             "E-Mail optional: ab 5 €/Monat",
         ],
         "cta_label": "Sorglos anfragen",
@@ -331,20 +346,20 @@ VERTRAGSMODELLE = [
         "id":        "flex",
         "name":      "Flex",
         "tagline":   "Nur zahlen, was wirklich gebraucht wird",
-        "einrichtung": 400,
+        "einrichtung": 500,
         "hosting":   7.99,
         "highlight": False,
         "badge":     "",
         "desc": (
             "Keine festen Anpassungsstunden — du zahlst nur die Hosting-Gebühr. "
-            "Jede Änderung wird nach Aufwand mit 50 €/Std. abgerechnet "
+            "Jede Änderung wird nach Aufwand mit 45 €/Std. abgerechnet "
             "(10-Minuten-Taktung)."
         ),
         "features": [
-            "Einmalige Einrichtung: 400 €",
+            "Einmalige Einrichtung: 500 €",
             "Hosting-Gebühr: 7,99 €/Monat (Server + Domain)",
             "Keine inkludierten Anpassungsstunden",
-            "Änderungsstundensatz: 50 €/Std. (10-Min-Taktung)",
+            "Änderungsstundensatz: 45 €/Std. (10-Min-Taktung)",
             "E-Mail optional: ab 5 €/Monat",
         ],
         "cta_label": "Flex anfragen",
@@ -352,16 +367,17 @@ VERTRAGSMODELLE = [
 ]
 
 STUNDENKONTINGENTE = [
-    {"name": "Basis",     "stunden": "1 Stunde Anpassung / Monat",      "preis": 15},
-    {"name": "Komfort",   "stunden": "2 Stunden Anpassung / Monat",     "preis": 25},
-    {"name": "Erweitert", "stunden": "3 Stunden Anpassung / Monat",     "preis": 35},
-    {"name": "Intensiv",  "stunden": "bis zu 5 Std. Anpassung / Monat", "preis": 55},
+    {"name": "Basis",     "stunden": "1 Stunde Anpassung / Monat",      "preis": 20},
+    {"name": "Komfort",   "stunden": "2 Stunden Anpassung / Monat",     "preis": 35},
+    {"name": "Erweitert", "stunden": "3 Stunden Anpassung / Monat",     "preis": 45},
+    {"name": "Premium",   "stunden": "4 Stunden Anpassung / Monat",     "preis": 53},
+    {"name": "Intensiv",  "stunden": "bis zu 5 Std. Anpassung / Monat", "preis": 60},
 ]
 
 STUNDENKONTINGENT_HINWEIS = (
     "Nicht in Anspruch genommene Stunden verfallen am Ende des jeweiligen "
     "Kalendermonats und werden nicht übertragen. Zusätzliche Stunden über das "
-    "gewählte Kontingent hinaus werden gemäß Änderungsstundensatz (30 €/Std.) "
+    "gewählte Kontingent hinaus werden gemäß Änderungsstundensatz (35 €/Std.) "
     "abgerechnet."
 )
 
@@ -373,7 +389,8 @@ EMAIL_ADDON = {
     "weiteres_postfach":     2,
     "desc": (
         "3 professionelle E-Mail-Postfächer auf deiner eigenen Domain, je 1 GB "
-        "Speicher, inklusive. Jedes weitere Postfach kostet 2 €/Monat zusätzlich."
+        "Speicher, inklusive. "
+        "Jedes weitere Postfach kostet 2 €/Monat zusätzlich. "
         "Nach weiterer Absprache können auch größere Postfächer oder zusätzliche Features (z. B. "
         "automatische Backups) hinzugefügt werden."
     ),

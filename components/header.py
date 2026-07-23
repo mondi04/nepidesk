@@ -11,10 +11,10 @@ def build_header(active: str = "home"):
     nav_links = [
         ("home",        "/",            "Start"),
         ("kunden",      "/kunden",      "Kundenprojekte"),
+        ("tarife",      "/tarife",      "Tarife"),
         ("opensource",  "/opensource",  "Open Source"),
         ("software",    "/software",    "Software"),
         ("infra",       "/infra",       "Infra"),
-        ("tarife",      "/tarife",      "Tarife"),
     ]
     nav_items = [
         a(nav_label, href=href, class_=f"nav-link {'nav-active' if key == active else ''}")

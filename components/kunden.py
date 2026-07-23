@@ -37,7 +37,7 @@ def _kunden_project_card(proj: dict, index: int):
 
 def _kunden_trust_bar():
     items = [
-        ("📁", f"{len(KUNDEN_PROJECTS)} abgeschlossene Projekte"),
+        ("📁", "alle Projekte maßgeschneidert"),
         ("⚡", "Handgeschriebener Code, kein Baukasten"),
         ("⏱️", "Antwort in 24–48 Stunden"),
         ("🔒", "DSGVO-konforme Umsetzung"),
