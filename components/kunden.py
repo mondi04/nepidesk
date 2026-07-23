@@ -39,7 +39,7 @@ def _kunden_trust_bar():
     items = [
         ("📁", "alle Projekte maßgeschneidert"),
         ("⚡", "Handgeschriebener Code, kein Baukasten"),
-        ("⏱️", "Antwort in 24–48 Stunden"),
+        ("⏱️", "Antwort in 24–96 Stunden"),
         ("🔒", "DSGVO-konforme Umsetzung"),
     ]
     chips = [
@@ -51,7 +51,7 @@ def _kunden_trust_bar():
 
 def _ablauf_steps():
     steps = [
-        ("01", "Anfrage", "Kurze Nachricht was du vorhast — ich melde mich innerhalb von 24–48 Stunden."),
+        ("01", "Anfrage", "Kurze Nachricht was du vorhast — ich melde mich innerhalb von 24–96 Stunden."),
         ("02", "Konzept & Angebot", "Gemeinsam klären wir Umfang, Design-Richtung und welches Tarifmodell passt."),
         ("03", "Umsetzung", "Handgeschriebener Code, regelmäßige Zwischenstände — keine Blackbox."),
         ("04", "Launch & Support", "Deine Website geht live, Hosting und Anpassungen laufen über dein gewähltes Modell weiter."),

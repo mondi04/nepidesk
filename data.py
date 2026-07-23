@@ -405,7 +405,8 @@ TARIFE_FAQ = [
      "abgerechnet in 10-Minuten-Schritten, damit auch kleine Anfragen fair "
      "berechnet werden."),
     ("Kann ich später zwischen Sorglos und Flex wechseln?",
-     "Ja, ein Wechsel ist zum nächsten Abrechnungsmonat jederzeit möglich."),
+     "Nein, ein Wechsel von Flex zu Sorglos ist zum nächsten Abrechnungsmonat jederzeit möglich. "
+     "Der Wechsel von Sorglos zu Flex ist jedoch erst nach 6 Monaten möglich."),
     ("Ist die Domain danach meine?",
      "Ja — die Domain wird zwar von uns über INWX registriert und verwaltet, "
      "verbleibt nach Vertragsende aber beim Auftraggeber."),
@@ -420,7 +421,7 @@ KONTAKT_INTRO = (
 
 KONTAKT_INFO = [
     ("E-MAIL",     "kontakt@nepidesk.de"),
-    ("REAKTION",   "24–48 Stunden"),
+    ("REAKTION",   "24–96 Stunden"),
     ("STANDORT",   "Schwarzwald, Deutschland"),
     ("SPRACHEN",   "Deutsch · Englisch"),
 ]

@@ -128,6 +128,7 @@ def _grundleistungen_block():
         h2("In beiden Modellen enthalten", class_="tarife-group-title"),
         div(*rows, class_="how-grid"),
         class_="tarife-group-head reveal",
+        id="email-addon",
     )
 
 

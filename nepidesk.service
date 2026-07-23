@@ -11,10 +11,10 @@ Restart=always
 RestartSec=5
 Environment=PYTHONUNBUFFERED=1
 # Kontaktformular — Migadu SMTP-Zugangsdaten (nicht im Code hinterlegen!)
-# Environment=NEPIDESK_CONTACT_TO=kontakt@nepidesk.de
-# Environment=NEPIDESK_SMTP_HOST=smtp.migadu.com
+# Environment=NEPIDESK_CONTACT_TO=moritz.mnd@gmail.com
+# Environment=NEPIDESK_SMTP_HOST=smtp.gmail.com
 # Environment=NEPIDESK_SMTP_PORT=465
-# Environment=NEPIDESK_SMTP_USER=kontakt@nepidesk.de
+# Environment=NEPIDESK_SMTP_USER=moritz.mnd@gmail.com
 # Environment=NEPIDESK_SMTP_PASS=CHANGE_ME
 
 [Install]

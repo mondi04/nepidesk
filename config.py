@@ -22,12 +22,13 @@ def _get(key: str, default: str | None = None, required: bool = False) -> str:
 # ── Flask ──────────────────────────────────────────────────
 SECRET_KEY = _get("SECRET_KEY", required=True)
 
-# ── Kontaktformular / SMTP (gleiche Namen wie bisher in app.py) ─────────────
-CONTACT_TO = _get("NEPIDESK_CONTACT_TO", "kontakt@nepidesk.de")
-SMTP_HOST  = _get("NEPIDESK_SMTP_HOST", "smtp.migadu.com")
-SMTP_PORT  = int(_get("NEPIDESK_SMTP_PORT", "465"))
-SMTP_USER  = _get("NEPIDESK_SMTP_USER", "")
-SMTP_PASS  = _get("NEPIDESK_SMTP_PASS", "")
+# Gmail SMTP
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 465
+SMTP_USER = os.getenv("SMTP_USER", "moritz.mnd@gmail.com")
+SMTP_PASS = os.getenv("SMTP_PASS", "dein-app-passwort")
+
+CONTACT_TO = _get("CONTACT_TO", "moritz.mnd@gmail.com")
 
 # ── Grafana / Infra-Monitoring ────────────────────────────────
 GRAFANA_BASE = _get("GRAFANA_BASE", "")
