@@ -20,15 +20,13 @@ def _get(key: str, default: str | None = None, required: bool = False) -> str:
 
 
 # ── Flask ──────────────────────────────────────────────────
-SECRET_KEY = _get("SECRET_KEY", required=True)
-
-# Gmail SMTP
-SMTP_HOST = "smtp.gmail.com"
-SMTP_PORT = 465
-SMTP_USER = os.getenv("SMTP_USER", "moritz.mnd@gmail.com")
-SMTP_PASS = os.getenv("SMTP_PASS", "dein-app-passwort")
-
-CONTACT_TO = _get("CONTACT_TO", "moritz.mnd@gmail.com")
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-key-change-in-production")
+CONTACT_TO = os.getenv("NEPIDESK_CONTACT_TO")
+SMTP_HOST = os.getenv("NEPIDESK_SMTP_HOST")
+SMTP_PORT = int(os.getenv("NEPIDESK_SMTP_PORT", "465"))
+SMTP_USER = os.getenv("NEPIDESK_SMTP_USER")
+SMTP_PASS = os.getenv("NEPIDESK_SMTP_PASS")
+RATE_LIMIT_SECONDS = int(os.getenv("RATE_LIMIT_SECONDS", "30"))
 
 # ── Grafana / Infra-Monitoring ────────────────────────────────
 GRAFANA_BASE = _get("GRAFANA_BASE", "")

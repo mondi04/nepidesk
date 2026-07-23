@@ -23,7 +23,7 @@ from components import (
     build_toast_sent,
 )
 from htmforge import render
-from config import SECRET_KEY, CONTACT_TO, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
+from config import SECRET_KEY, CONTACT_TO, SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, RATE_LIMIT_SECONDS
 
 EMAIL_RE = re.compile(r"^[^\@\s]+@[^\@\s]+\.[^\@\s]+$")
 
@@ -46,7 +46,7 @@ def _hashes():
 def _check_rate_limit(ip: str) -> bool:
     now = datetime.now()
     last = CONTACT_RATE_LIMIT.get(ip)
-    if last and (now - last) < timedelta(seconds=30):
+    if last and (now - last) < timedelta(seconds=RATE_LIMIT_SECONDS):
         return False
     CONTACT_RATE_LIMIT[ip] = now
     return True
@@ -91,7 +91,7 @@ def kontakt():
 def kontakt_senden():
     ip = request.remote_addr
     if not _check_rate_limit(ip):
-        return Response(render(build_toast_error("Zu viele Anfragen. Bitte 30 Sekunden warten.")), mimetype="text/html", status=429)
+        return Response(render(build_toast_error(f"Zu viele Anfragen. Bitte {RATE_LIMIT_SECONDS} Sekunden warten.")), mimetype="text/html", status=429)
     
     name = (request.form.get("name") or "").strip()
     email = (request.form.get("email") or "").strip()
